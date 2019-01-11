@@ -457,20 +457,6 @@ void setup(){
   }
   tmElements_t tm;
   DateTime now1 = rtc.now();
-  /*Serial.print(now.year(), DEC);
-  Serial.print('/');
-  Serial.print(now.month(), DEC);
-  Serial.print('/');
-  Serial.print(now.day(), DEC);
-  Serial.print(" (");
-  Serial.print(now.dayOfTheWeek(), DEC);
-  Serial.print(") ");
-  Serial.print(now.hour(), DEC);
-  Serial.print(':');
-  Serial.print(now.minute(), DEC);
-  Serial.print(now.second(), DEC);
-  Serial.print(':');
-  Serial.println();*/
   tm.Year = CalendarYrToTm(now1.year());
   tm.Month = now1.month();
   tm.Day = now1.day();
