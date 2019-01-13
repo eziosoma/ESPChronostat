@@ -33,6 +33,7 @@
 #include <DHT.h>
 #include "RTClib.h"
 #include <Timezone.h>         //https://github.com/JChristensen/Timezone
+#include "nvs_flash.h"
 
 // Central Europe Time Zone (Rome)
 TimeChangeRule myCEST = {"CEST", Last, Sun, Mar, 2, +120};    //Daylight time = UTC +2 hours
@@ -426,11 +427,26 @@ void setup(){
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
   }
-
+  //DO NOT TOUCH
+  //  This is here to force the ESP32 to reset the WiFi and initialise correctly.
+  /*Serial.print("WIFI status = ");
+  Serial.println(WiFi.getMode());
+  WiFi.disconnect(true);
+  delay(1000);
+  WiFi.mode(WIFI_STA);
+  delay(1000);
+  Serial.print("WIFI status = ");
+  Serial.println(WiFi.getMode());*/
+  // End silly stuff !!!
   // Connect to Wi-Fi
+  int err;
+  err=nvs_flash_init();
+  Serial.println("nvs_flash_init: " + err);
+  err=nvs_flash_erase();
+  Serial.println("nvs_flash_erase: " + err);
   int k=0;
   WiFi.begin(ssid, password);
-  while ((WiFi.status() != WL_CONNECTED) && (k<=10)) {
+  while ((WiFi.status() != WL_CONNECTED) && (k<=40)) {
     delay(1000);
     Serial.println("Connecting to WiFi..");
     k++;
@@ -438,6 +454,7 @@ void setup(){
 
   // Print ESP32 Local IP Address
   Serial.println(WiFi.localIP());
+  Serial.printf("New Client. RSSi: %d dBm\n",WiFi.RSSI());
   // show IP on the OLED
   u8g2.clearBuffer();         // clear the internal memory
   u8g2.setFont(u8g2_font_ncenB12_tr); // choose a suitable font
